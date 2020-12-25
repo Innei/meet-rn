@@ -1,10 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import { Platform } from 'react-native';
 // @ts-ignore
 import Icons from 'react-native-vector-icons/FontAwesome5';
-import { HomeScreen, HomeStackScreen } from '../../screens/home';
+import { HomeStackScreen } from '../../screens/home';
 
 const Tab = createBottomTabNavigator();
 export const BottomNavigationTabSimpleUsageShowcase = () => {
