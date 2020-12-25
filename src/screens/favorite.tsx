@@ -2,16 +2,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { FC } from 'react';
 
 const { Screen, Navigator } = createStackNavigator();
-export const InspireScreen: FC = () => {
+export const FavoriteScreen: FC = () => {
   return null;
 };
 
-export const InspireStackScreen: FC = () => (
+export const FavoriteStackScreen: FC = () => (
   <Navigator>
     <Screen
-      name="inspire"
-      options={{ title: '灵感' }}
-      component={InspireScreen}
+      name="favorite"
+      options={{ title: '喜欢' }}
+      component={FavoriteScreen}
     />
   </Navigator>
 );

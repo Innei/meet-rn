@@ -37,8 +37,7 @@ export const deleteFavoriteToExistListFromStorage = async (id: Snowflake) => {
     return;
   }
   const prev = await getFavoriteListFromStorage();
-  const index = prev.findIndex((m) => m.id === id);
-  const after = prev.splice(index, 1);
+  const after = prev.filter((m) => m.id !== id);
+
   await AsyncStorage.setItem(FAVORITE_KEY, JSON.stringify(after));
-  return prev[index];
 };

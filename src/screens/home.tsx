@@ -1,6 +1,14 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import dayjs from 'dayjs';
-import React, { ClassicComponent, useEffect, useRef, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import React, {
+  ClassicComponent,
+  Fragment,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Alert,
   Platform,
@@ -17,12 +25,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import { Colors } from '../constants/color';
 import { HitokotoModel } from '../models';
+import { useStore } from '../store';
 import { toast } from '../utils/for-android';
 import { $http } from '../utils/request';
-import { addFavoriteToExistListFromStorage } from '../utils/storage';
 
 const { Navigator, Screen } = createStackNavigator();
-export const HomeScreen = ({ navigation }: any) => {
+export const HomeScreen = observer(({ navigation }: any) => {
   const today = dayjs().format('YYYY-M-D');
 
   const [data, setData] = useState<null | HitokotoModel>(null);
@@ -78,28 +86,42 @@ export const HomeScreen = ({ navigation }: any) => {
       console.log(error.message);
     }
   };
-
+  const { favoriteStore } = useStore();
   const handleLike = () => {
     if (!data) {
       return;
     }
-    addFavoriteToExistListFromStorage({
-      creator: data.creator,
-      from: data.from,
-      text: data.hitokoto,
-      createdAt: new Date().toISOString(),
-    }).then((list) => {
-      // console.log(list);
-      const message = '已添加到喜欢';
-      if (Platform.OS === 'ios') {
-        Alert.alert(message);
-      } else if (Platform.OS === 'android') {
-        // toast.setText(message);
-        // toast.setVisible(true);
-        toast(message);
-      }
-    });
+    if (!isLiked) {
+      favoriteStore
+        .add({
+          creator: data.creator,
+          from: data.from,
+          text: data.hitokoto,
+          createdAt: new Date().toISOString(),
+          id: data.id.toString(),
+        })
+        .then((list) => {
+          // console.log(list);
+          const message = '已添加到喜欢';
+          if (Platform.OS === 'ios') {
+            Alert.alert(message);
+          } else if (Platform.OS === 'android') {
+            // toast.setText(message);
+            // toast.setVisible(true);
+            toast(message);
+          }
+        });
+    } else {
+      favoriteStore.deleteById(data.id.toString());
+    }
   };
+
+  const isLiked = useMemo(() => {
+    if (!data) {
+      return false;
+    }
+    return favoriteStore.list.some((m) => m.id === data.id.toString());
+  }, [data, favoriteStore.list]);
   return (
     <SafeAreaView>
       <View
@@ -114,18 +136,31 @@ export const HomeScreen = ({ navigation }: any) => {
           </View>
           <View style={styles.content}>
             <Text style={styles.text}>{data?.hitokoto}</Text>
-            {data?.from ? (
-              <Text style={{ textAlign: 'right' }}>来自 {data.from}</Text>
-            ) : null}
+            {data ? (
+              <Fragment>
+                {data.from ? (
+                  <Text style={{ textAlign: 'right' }}>来自 {data.from}</Text>
+                ) : null}
 
-            {data?.creator ? (
-              <Text style={{ textAlign: 'right' }}>作者 {data.creator}</Text>
-            ) : null}
+                {data.creator ? (
+                  <Text style={{ textAlign: 'right' }}>
+                    作者 {data.creator}
+                  </Text>
+                ) : null}
+              </Fragment>
+            ) : (
+              <Text>载入中...</Text>
+            )}
           </View>
         </View>
         <View style={styles.actions}>
           <TouchableOpacity onPress={handleLike}>
-            <Icons name="heart" size={30} style={styles.icon} />
+            <Icons
+              name="heart"
+              size={30}
+              style={[styles.icon, { color: isLiked ? Colors.red : undefined }]}
+              solid={isLiked}
+            />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleShare}>
             <Icons name="share" size={30} />
@@ -147,7 +182,8 @@ export const HomeScreen = ({ navigation }: any) => {
       </View>
     </SafeAreaView>
   );
-};
+});
+
 export const HomeStackScreen = () => (
   <Navigator>
     <Screen
@@ -172,6 +208,7 @@ const styles = StyleSheet.create({
   },
   content: {
     marginVertical: 12,
+    width: '100%',
     paddingHorizontal: 30,
   },
   actions: {
