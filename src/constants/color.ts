@@ -8,4 +8,5 @@ export const Colors = {
   green: '#1abc9c',
   red: '#e74c3c',
   blue: '#3498db',
+  overlay: 'rgba(149, 165, 166, 0.6)',
 };

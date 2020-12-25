@@ -135,9 +135,9 @@ export const HomeScreen = observer(({ navigation }: any) => {
             <Text style={styles.header}>{today}</Text>
           </View>
           <View style={styles.content}>
-            <Text style={styles.text}>{data?.hitokoto}</Text>
             {data ? (
               <Fragment>
+                <Text style={styles.text}>{data.hitokoto}</Text>
                 {data.from ? (
                   <Text style={{ textAlign: 'right' }}>来自 {data.from}</Text>
                 ) : null}
@@ -196,6 +196,7 @@ export const HomeStackScreen = () => (
 const styles = StyleSheet.create({
   root: {
     minHeight: Platform.OS === 'ios' ? '95%' : '100%',
+    minWidth: '100%',
     flex: 1,
     flexDirection: 'column',
   },

@@ -10,7 +10,7 @@
 
 import React from 'react';
 import { StatusBar } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
+
 import { AppNavigator } from './src/components/navigator';
 
 declare const global: { HermesInternal: null | {} };
@@ -18,9 +18,7 @@ declare const global: { HermesInternal: null | {} };
 const App = () => {
   return (
     <>
-      <PaperProvider>
-        <AppNavigator />
-      </PaperProvider>
+      <AppNavigator />
 
       <StatusBar barStyle="dark-content" />
     </>
