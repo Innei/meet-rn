@@ -18,7 +18,7 @@ export const FavoriteScreen: FC = observer(() => {
   const navigator = useNavigation();
 
   return (
-    <View>
+    <View style={{ minHeight: '100%' }}>
       {list.length > 0 ? (
         <FlatList
           data={list}
