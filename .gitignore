@@ -63,3 +63,4 @@ buck-out/
 /ios/Pods/
 
 Pods/*
+index.android.bundle
