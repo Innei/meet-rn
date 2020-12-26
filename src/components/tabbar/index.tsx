@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { Platform } from 'react-native';
-// @ts-ignore
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import AntdIcons from 'react-native-vector-icons/AntDesign';
 import { HomeStackScreen } from '../../screens/home';

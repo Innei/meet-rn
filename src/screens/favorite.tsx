@@ -9,7 +9,6 @@ import { Item } from '../components/item';
 import { Colors } from '../constants/color';
 import { FavoriteModel } from '../models';
 import { useStore } from '../store';
-import { Modal } from './modal-view';
 
 const { Screen, Navigator } = createStackNavigator();
 export const FavoriteScreen: FC = observer(() => {
