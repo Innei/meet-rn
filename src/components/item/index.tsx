@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
 
     width: '100%',
-    marginBottom: 5,
+    marginTop: 5,
   },
   from: {
     fontWeight: '300',
