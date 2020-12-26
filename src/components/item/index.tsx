@@ -1,13 +1,14 @@
 import dayjs from 'dayjs';
-import React, { FC, PureComponent } from 'react';
-import { StyleSheet, View, Text, Animated } from 'react-native';
+import React, { PureComponent } from 'react';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { RectButton, TouchableHighlight } from 'react-native-gesture-handler';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Colors } from '../../constants/color';
 import { FavoriteModel } from '../../models';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 export interface ItemProps {
   item: FavoriteModel;
   onDelete: (id: string) => void;
+  onPress: (id: string) => void;
 }
 
 export class Item extends PureComponent<ItemProps, any> {
@@ -76,7 +77,9 @@ export class Item extends PureComponent<ItemProps, any> {
         renderRightActions={this.renderRightActions}
       >
         <TouchableHighlight
-          onPress={() => {}}
+          onPress={() => {
+            this.props.onPress(this.props.item.id);
+          }}
           activeOpacity={0.6}
           underlayColor={Colors.overlay}
         >
@@ -94,7 +97,7 @@ export class Item extends PureComponent<ItemProps, any> {
                 ellipsizeMode={'tail'}
                 numberOfLines={2}
               >
-                {item.text.repeat(100)}
+                {item.text}
               </Text>
             </View>
             <View style={styles.wrap}>

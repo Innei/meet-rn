@@ -14,7 +14,7 @@ export default function createMobxStores(): Stores {
     favoriteStore: new FavoriteStore(),
   };
 }
-
-export const StoreContext = createContext<Stores>(createMobxStores());
+export const Store = createMobxStores();
+export const StoreContext = createContext<Stores>(Store);
 export const StoreProvider = StoreContext.Provider;
 export const useStore = (): Stores => useContext(StoreContext);

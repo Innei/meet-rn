@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
@@ -8,22 +9,28 @@ import { Item } from '../components/item';
 import { Colors } from '../constants/color';
 import { FavoriteModel } from '../models';
 import { useStore } from '../store';
+import { Modal } from './modal-view';
 
 const { Screen, Navigator } = createStackNavigator();
 export const FavoriteScreen: FC = observer(() => {
   const { favoriteStore } = useStore();
   const list = favoriteStore.list;
 
+  const navigator = useNavigation();
+
   return (
     <View>
       {list.length > 0 ? (
         <FlatList
           data={list}
-          renderItem={(item) => (
+          renderItem={(listRenderItem) => (
             <Item
-              item={item.item}
+              item={listRenderItem.item}
               onDelete={(id) => {
                 favoriteStore.deleteById(id);
+              }}
+              onPress={(id) => {
+                navigator.navigate('item-modal', { item: listRenderItem.item });
               }}
             />
           )}
@@ -44,8 +51,44 @@ export const FavoriteScreen: FC = observer(() => {
     </View>
   );
 });
+export const ModalView: FC<{
+  route: { key: string; name: string; params: { item?: FavoriteModel } };
+}> = (props) => {
+  const item = props.route.params.item;
+  console.log(item);
+  const navigator = useNavigation();
+  if (!item) {
+    navigator.navigate('home');
+    return null;
+  }
 
-export const FavoriteStackScreen: FC = () => (
+  return (
+    <View
+      style={{
+        flex: 1,
+        minHeight: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+      }}
+    >
+      <Text
+        style={{
+          color: Colors.theme,
+          fontSize: 24,
+        }}
+      >
+        {item.text}
+      </Text>
+
+      <Text style={{ alignSelf: 'flex-end' }}>来自 {item.from}</Text>
+
+      <Text style={{ alignSelf: 'flex-end' }}>作者 {item.creator}</Text>
+    </View>
+  );
+};
+const RootStack = createStackNavigator();
+export const _FavoriteStackScreen: FC = () => (
   <Navigator>
     <Screen
       name="favorite"
@@ -53,4 +96,19 @@ export const FavoriteStackScreen: FC = () => (
       component={FavoriteScreen}
     />
   </Navigator>
+);
+
+export const FavoriteStackScreen = () => (
+  <RootStack.Navigator>
+    <RootStack.Screen
+      component={_FavoriteStackScreen}
+      name={'child-stack'}
+      options={{ headerShown: false, title: '喜欢' }}
+    />
+    <RootStack.Screen
+      component={ModalView}
+      name={'item-modal'}
+      options={{ title: '预览' }}
+    />
+  </RootStack.Navigator>
 );

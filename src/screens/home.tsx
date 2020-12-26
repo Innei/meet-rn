@@ -229,15 +229,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.theme,
     padding: 20,
     borderRadius: 50,
-    shadowColor: Colors.deep,
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    ...(Platform.OS === 'ios'
+      ? {
+          shadowColor: Colors.deep,
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.22,
+          shadowRadius: 2.22,
 
-    elevation: 3,
+          elevation: 3,
+        }
+      : {}),
   },
   icon: { marginRight: 48 },
 
