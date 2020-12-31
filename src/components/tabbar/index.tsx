@@ -3,9 +3,11 @@ import React from 'react';
 import { Platform } from 'react-native';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import AntdIcons from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { HomeStackScreen } from '../../screens/home';
 import { InspireStackScreen } from '../../screens/inspire';
 import { FavoriteStackScreen } from '../../screens/favorite';
+import { SettingStackScreen } from '../../screens/setting';
 
 const Tab = createBottomTabNavigator();
 export const BottomNavigationTabSimpleUsageShowcase = () => {
@@ -57,6 +59,22 @@ export const BottomNavigationTabSimpleUsageShowcase = () => {
                 <AntdIcons name="heart" color={color} size={size} />
               ) : (
                 <AntdIcons name="hearto" color={color} size={size} />
+              )}
+            </>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="setting"
+        component={SettingStackScreen}
+        options={{
+          title: '设置',
+          tabBarIcon: ({ color, size, focused }) => (
+            <>
+              {!focused ? (
+                <AntdIcons name="setting" color={color} size={size} />
+              ) : (
+                <Ionicons name="ios-settings-sharp" color={color} size={size} />
               )}
             </>
           ),

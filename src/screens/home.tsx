@@ -1,3 +1,4 @@
+import Clipboard from '@react-native-community/clipboard';
 import { createStackNavigator } from '@react-navigation/stack';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
@@ -12,6 +13,7 @@ import React, {
 import {
   Alert,
   Platform,
+  Pressable,
   Share,
   StyleSheet,
   Text,
@@ -62,7 +64,7 @@ export const HomeScreen = observer(({ navigation }: any) => {
       return;
     }
 
-    (buttonRef.current as any).rotate(800);
+    (buttonRef.current as any).rotate(720);
   };
 
   const handleShare = async () => {
@@ -137,7 +139,14 @@ export const HomeScreen = observer(({ navigation }: any) => {
           <View style={styles.content}>
             {data ? (
               <Fragment>
-                <Text style={styles.text}>{data.hitokoto}</Text>
+                <Pressable
+                  onLongPress={() => {
+                    Clipboard.setString(data.hitokoto);
+                    toast('已复制: ' + data.hitokoto);
+                  }}
+                >
+                  <Text style={styles.text}>{data.hitokoto}</Text>
+                </Pressable>
                 {data.from ? (
                   <Text style={{ textAlign: 'right' }}>来自 {data.from}</Text>
                 ) : null}
@@ -157,13 +166,13 @@ export const HomeScreen = observer(({ navigation }: any) => {
           <TouchableOpacity onPress={handleLike}>
             <Icons
               name="heart"
-              size={30}
+              size={18}
               style={[styles.icon, { color: isLiked ? Colors.red : undefined }]}
               solid={isLiked}
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleShare}>
-            <Icons name="share" size={30} />
+            <Icons name="share" size={18} />
           </TouchableOpacity>
         </View>
 
@@ -175,7 +184,7 @@ export const HomeScreen = observer(({ navigation }: any) => {
             }}
           >
             <Animatable.View style={styles.refresh_button} ref={buttonRef}>
-              <Icons name="sync" size={30} color={Colors.white} />
+              <Icons name="sync" size={16} color={Colors.white} />
             </Animatable.View>
           </TouchableOpacity>
         </View>

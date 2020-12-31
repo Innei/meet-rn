@@ -1,5 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 import { Text } from 'react-native';
@@ -98,7 +101,9 @@ export const _FavoriteStackScreen: FC = () => (
 );
 
 export const FavoriteStackScreen = () => (
-  <RootStack.Navigator>
+  <RootStack.Navigator
+    screenOptions={{ ...TransitionPresets.SlideFromRightIOS }}
+  >
     <RootStack.Screen
       component={_FavoriteStackScreen}
       name={'child-stack'}
