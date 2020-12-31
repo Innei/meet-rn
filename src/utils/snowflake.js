@@ -95,6 +95,9 @@ export default class FlakeId {
     this.timeOffset = options.timeOffset || 0;
     this.lastTime = 0;
   }
+  /**
+   * @returns {string}
+   */
   gen() {
     const time = Date.now(),
       bTime = (time - this.timeOffset).toString(2);

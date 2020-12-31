@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { FavoriteModel, Snowflake } from '../models';
+import FlakeId from '../utils/snowflake';
 import {
   addFavoriteToExistListFromStorage,
   deleteFavoriteToExistListFromStorage,
@@ -27,6 +28,9 @@ export class FavoriteStore {
   add = async (
     model: Omit<FavoriteModel, 'id'> & Partial<Pick<FavoriteModel, 'id'>>,
   ) => {
+    if (!model.id) {
+      model.id = new FlakeId().gen();
+    }
     this.list = await addFavoriteToExistListFromStorage(model);
     return this.list;
   };

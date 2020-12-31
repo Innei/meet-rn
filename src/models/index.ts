@@ -1,24 +1,23 @@
 export interface HitokotoModel {
-  commitFrom: string;
   createdAt: string;
   creator: string;
-  creatorUid: number;
   from: string;
-  fromWho: string;
+  user_id?: string;
   hitokoto: string;
   id: number;
-  length: number;
-  reviewer: number;
+  nonce: Snowflake;
   type: string;
-  uuid: string;
 }
 
 type Date = string;
 export type Snowflake = string;
+export type ObjectID = string;
+
 export type FavoriteModel = {
   createdAt: Date;
   text: string;
   creator: string | undefined;
   from: string | undefined;
-  id: Snowflake;
+  id: Snowflake | ObjectID;
+  user_id?: string;
 };

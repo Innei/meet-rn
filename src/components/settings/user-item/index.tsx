@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.3,
     borderTopWidth: 0.3,
     borderColor: '#bbb',
+    backgroundColor: Colors.fff,
     position: 'relative',
   },
   rounded: {
