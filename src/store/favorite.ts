@@ -1,11 +1,7 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, toJS } from 'mobx';
 import { FavoriteModel, Snowflake } from '../models';
 import FlakeId from '../utils/snowflake';
-import {
-  addFavoriteToExistListFromStorage,
-  deleteFavoriteToExistListFromStorage,
-  getFavoriteListFromStorage,
-} from '../utils/storage';
+import { FavoriteStorage, PendingStorage } from '../utils/storage';
 
 export class FavoriteStore {
   constructor() {
@@ -20,7 +16,7 @@ export class FavoriteStore {
   }
 
   loadList = async () => {
-    const list = await getFavoriteListFromStorage();
+    const list = await FavoriteStorage.getList();
     this.list = list;
     return this.list;
   };
@@ -31,12 +27,13 @@ export class FavoriteStore {
     if (!model.id) {
       model.id = new FlakeId().gen();
     }
-    this.list = await addFavoriteToExistListFromStorage(model);
+    const newModel = await FavoriteStorage.add(model);
+    this.list = this.list.concat(newModel);
     return this.list;
   };
 
   deleteById = async (id: Snowflake) => {
-    await deleteFavoriteToExistListFromStorage(id);
+    await FavoriteStorage.delete(id);
     this.list = this.list.filter((m) => m.id !== id);
     return this.list;
   };

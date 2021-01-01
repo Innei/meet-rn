@@ -26,7 +26,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import { Colors } from '../constants/color';
-import { HitokotoModel } from '../models';
+import { HitokotoModel, SentenceModel } from '../models';
 import { useStore } from '../store';
 import { toast } from '../utils/for-android';
 import { $http } from '../utils/request';
@@ -35,21 +35,15 @@ const { Navigator, Screen } = createStackNavigator();
 export const HomeScreen = observer(({ navigation }: any) => {
   const today = dayjs().format('YYYY-M-D');
 
-  const [data, setData] = useState<null | HitokotoModel>(null);
+  const [data, setData] = useState<null | SentenceModel>(null);
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = () => {
-    $http
-      .get('/', {
-        params: {
-          c: 'd',
-        },
-      })
-      .then((data) => {
-        setData(data as any);
-      });
+    $http.get<SentenceModel>('/sentences').then((data) => {
+      setData(data as any);
+    });
   };
 
   const buttonRef = useRef<
@@ -73,7 +67,7 @@ export const HomeScreen = observer(({ navigation }: any) => {
     }
     try {
       const result = await Share.share({
-        message: `${data.hitokoto}  -- ${data.from || data.creator || '佚名'}`,
+        message: `${data.text}  -- ${data.from || data.author || '佚名'}`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -96,11 +90,11 @@ export const HomeScreen = observer(({ navigation }: any) => {
     if (!isLiked) {
       favoriteStore
         .add({
-          creator: data.creator,
+          creator: data.author,
           from: data.from,
-          text: data.hitokoto,
-          createdAt: new Date().toISOString(),
-          id: data.id.toString(),
+          text: data.text,
+          createdAt: new Date(),
+          id: data.id,
         })
         .then((list) => {
           // console.log(list);
@@ -114,7 +108,7 @@ export const HomeScreen = observer(({ navigation }: any) => {
           }
         });
     } else {
-      favoriteStore.deleteById(data.id.toString());
+      favoriteStore.deleteById(data.id);
     }
   };
 
@@ -122,7 +116,7 @@ export const HomeScreen = observer(({ navigation }: any) => {
     if (!data) {
       return false;
     }
-    return favoriteStore.list.some((m) => m.id === data.id.toString());
+    return favoriteStore.list.some((m) => m.id === data.id);
   }, [data, favoriteStore.list]);
   return (
     <SafeAreaView>
@@ -141,20 +135,18 @@ export const HomeScreen = observer(({ navigation }: any) => {
               <Fragment>
                 <Pressable
                   onLongPress={() => {
-                    Clipboard.setString(data.hitokoto);
-                    toast('已复制: ' + data.hitokoto);
+                    Clipboard.setString(data.text);
+                    toast('已复制: ' + data.text);
                   }}
                 >
-                  <Text style={styles.text}>{data.hitokoto}</Text>
+                  <Text style={styles.text}>{data.text}</Text>
                 </Pressable>
                 {data.from ? (
                   <Text style={{ textAlign: 'right' }}>来自 {data.from}</Text>
                 ) : null}
 
-                {data.creator ? (
-                  <Text style={{ textAlign: 'right' }}>
-                    作者 {data.creator}
-                  </Text>
+                {data.author ? (
+                  <Text style={{ textAlign: 'right' }}>作者 {data.author}</Text>
                 ) : null}
               </Fragment>
             ) : (

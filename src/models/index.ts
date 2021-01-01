@@ -1,5 +1,5 @@
 export interface HitokotoModel {
-  createdAt: string;
+  createdAt: Date;
   creator: string;
   from: string;
   user_id?: string;
@@ -8,8 +8,22 @@ export interface HitokotoModel {
   nonce: Snowflake;
   type: string;
 }
+export enum SentenceType {
+  SYSTEM,
+  USER,
+}
+export interface SentenceModel {
+  type: SentenceType;
+  id: string;
+  author?: string;
+  from?: string;
+  nonce: string;
 
-type Date = string;
+  createdAt: Date;
+  updatedAt: Date;
+  text: string;
+}
+
 export type Snowflake = string;
 export type ObjectID = string;
 

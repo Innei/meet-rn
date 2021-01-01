@@ -40,7 +40,7 @@ class Draft {
       return;
     }
     await Store.favoriteStore.add({
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(),
       creator: this.creator || undefined,
       from: this.from || undefined,
       text: this.text,
