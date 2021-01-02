@@ -90,7 +90,7 @@ export const HomeScreen = observer(({ navigation }: any) => {
     if (!isLiked) {
       favoriteStore
         .add({
-          creator: data.author,
+          author: data.author,
           from: data.from,
           text: data.text,
           createdAt: new Date(),

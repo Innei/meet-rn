@@ -65,17 +65,13 @@ export const BottomNavigationTabSimpleUsageShowcase = () => {
         }}
       />
       <Tab.Screen
-        name="setting"
+        name="@me"
         component={SettingStackScreen}
         options={{
-          title: '设置',
+          title: '我',
           tabBarIcon: ({ color, size, focused }) => (
             <>
-              {!focused ? (
-                <AntdIcons name="setting" color={color} size={size} />
-              ) : (
-                <Ionicons name="ios-settings-sharp" color={color} size={size} />
-              )}
+              <AntdIcons name="user" color={color} size={size} />
             </>
           ),
         }}

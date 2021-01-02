@@ -109,7 +109,7 @@ export class Item extends PureComponent<ItemProps, any> {
                 numberOfLines={1}
                 ellipsizeMode={'tail'}
               >
-                {item.from || item.creator || '佚名'}
+                {item.from || item.author || '佚名'}
               </Text>
             </View>
           </Animated.View>

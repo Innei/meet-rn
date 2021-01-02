@@ -41,7 +41,7 @@ class Draft {
     }
     await Store.favoriteStore.add({
       createdAt: new Date(),
-      creator: this.creator || undefined,
+      author: this.creator || undefined,
       from: this.from || undefined,
       text: this.text,
     });

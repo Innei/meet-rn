@@ -1,10 +1,16 @@
+import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { Colors } from '../../../constants/color';
+import { useStore } from '../../../store';
 
 interface UserItemProps {}
 
-export const UserItem: FC<UserItemProps> = (props) => {
+export const UserItem: FC<UserItemProps> = observer((props) => {
+  const {
+    userStore: { user },
+    syncStore,
+  } = useStore();
   return (
     <View style={styles.root}>
       <View style={[{ width: 100, padding: 10, marginLeft: 10 }]}>
@@ -20,7 +26,7 @@ export const UserItem: FC<UserItemProps> = (props) => {
         >
           <Image
             source={{
-              uri: 'https://tu-1252943311.file.myqcloud.com/avatar.png',
+              uri: user.avatar,
             }}
             style={[
               styles.rounded,
@@ -47,13 +53,15 @@ export const UserItem: FC<UserItemProps> = (props) => {
         }}
       >
         <View>
-          <Text style={{ fontSize: 24, color: Colors.blue }}>Innei</Text>
-          <Text style={{}}>已同步 30 条</Text>
+          <Text style={{ fontSize: 24, color: Colors.blue }}>
+            {user.username}
+          </Text>
+          <Text style={{}}>已同步 {syncStore.list.length} 条</Text>
         </View>
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   root: {
@@ -69,3 +77,13 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
+
+export const sharedStyle = {
+  root: {
+    borderBottomWidth: 0.3,
+    borderTopWidth: 0.3,
+    borderColor: '#bbb',
+    backgroundColor: Colors.fff,
+    position: 'relative',
+  },
+};

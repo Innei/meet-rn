@@ -53,6 +53,7 @@ export const FavoriteScreen: FC = observer(() => {
     </View>
   );
 });
+
 export const ModalView: FC<{
   route: { key: string; name: string; params: { item?: FavoriteModel } };
 }> = (props) => {
@@ -85,10 +86,11 @@ export const ModalView: FC<{
 
       <Text style={{ alignSelf: 'flex-end' }}>来自 {item.from}</Text>
 
-      <Text style={{ alignSelf: 'flex-end' }}>作者 {item.creator}</Text>
+      <Text style={{ alignSelf: 'flex-end' }}>作者 {item.author}</Text>
     </View>
   );
 };
+
 const RootStack = createStackNavigator();
 export const _FavoriteStackScreen: FC = () => (
   <Navigator>

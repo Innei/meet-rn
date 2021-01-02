@@ -2,7 +2,7 @@ export interface HitokotoModel {
   createdAt: Date;
   creator: string;
   from: string;
-  user_id?: string;
+  userId?: string;
   hitokoto: string;
   id: number;
   nonce: Snowflake;
@@ -30,8 +30,16 @@ export type ObjectID = string;
 export type FavoriteModel = {
   createdAt: Date;
   text: string;
-  creator: string | undefined;
-  from: string | undefined;
+  author?: string | undefined;
+  from?: string | undefined;
   id: Snowflake | ObjectID;
-  user_id?: string;
+  userId?: string;
+  type: SentenceType;
+};
+
+export type UserModel = {
+  username: string;
+  email: string;
+  avatar: string;
+  id: string;
 };
