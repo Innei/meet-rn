@@ -1,6 +1,8 @@
 import React, { FC, Fragment } from 'react';
-import { Button, ButtonProps, View } from 'react-native';
+import { Button, ButtonProps, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Colors } from '../../../constants/color';
+import { isIOS } from '../../../utils';
 import { Divider } from '../../divider';
 
 export const ListItemGroup: FC<{ divider?: boolean }> = (props) => {
@@ -26,7 +28,17 @@ export const ListItemGroup: FC<{ divider?: boolean }> = (props) => {
 export const ListButtonItem: FC<ButtonProps> = (props) => {
   return (
     <View style={{ paddingVertical: 6 }}>
-      <Button {...props} />
+      {isIOS ? (
+        <Button {...props} />
+      ) : (
+        <TouchableOpacity onPress={props.onPress}>
+          <View style={{ paddingVertical: 6, alignItems: 'center' }}>
+            <Text style={{ color: Colors.blue, fontSize: 14 }}>
+              {props.title}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
