@@ -20,15 +20,24 @@ export class SyncStore {
   };
 
   delete = async (id: string) => {
-    await $http.delete('/sentences/' + id);
-    this.list.filter((i) => i.id !== id || i.nonce !== id);
+    const origin = [...this.list];
+    this.list = this.list.filter((i) => i.id !== id);
+
+    try {
+      await $http.delete('/sentences/' + id);
+    } catch {
+      this.list = origin;
+    }
+    // console.log(id, this.list);
   };
 
   sync = async (
     list: Pick<SentenceModel, 'author' | 'from' | 'type' | 'nonce' | 'text'>[],
   ) => {
+    // console.log(list);
+
     const { data: newList } = await $http.post('/sentences/sync', list);
-    console.log(newList);
+    // console.log(newList);
 
     this.list = newList;
   };

@@ -22,6 +22,8 @@ export interface SentenceModel {
   createdAt: Date;
   updatedAt: Date;
   text: string;
+  likedId?: string;
+  liked?: SentenceModel;
 }
 
 export type Snowflake = string;
@@ -35,6 +37,7 @@ export type FavoriteModel = {
   id: Snowflake | ObjectID;
   userId?: string;
   type: SentenceType;
+  likeId?: string;
 };
 
 export type UserModel = {

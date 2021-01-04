@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
-import React, { FC, Fragment, useCallback } from 'react';
-import { View } from 'react-native';
+import React, { FC, Fragment, useCallback, useEffect } from 'react';
+import { Alert, View } from 'react-native';
 import {
   FlatList,
   ScrollView,
@@ -33,6 +34,9 @@ export const SettingScreen: FC = observer(() => {
     [login],
   );
   const navigator = useNavigation();
+  useEffect(() => {
+    syncStore.fetch();
+  }, []);
   return (
     <View style={{ minHeight: '100%' }}>
       <ScrollView>
@@ -41,7 +45,17 @@ export const SettingScreen: FC = observer(() => {
           <View>
             <TouchableOpacity
               onPress={() => {
-                logout();
+                Alert.alert('真的要离开吗?', '登出后仍可离线使用', [
+                  {
+                    onPress: () => {
+                      logout();
+                    },
+                    text: '嗯!',
+                  },
+                  {
+                    text: '再想想吧',
+                  },
+                ]);
               }}
             >
               <UserItem />
@@ -51,15 +65,27 @@ export const SettingScreen: FC = observer(() => {
               <ListButtonItem
                 title={'立即上传'}
                 onPress={() => {
-                  syncStore.sync(
-                    favoriteStore.list.map((item) => ({
-                      nonce: item.id,
-                      text: item.text,
-                      type: item.type,
-                      author: item.author,
-                      from: item.from,
-                    })),
-                  );
+                  Alert.alert('是否上传', '上传将会用本地数据覆盖云端数据', [
+                    {
+                      text: '嗯',
+                      onPress: () => {
+                        syncStore.sync(
+                          favoriteStore.list.map((item) => ({
+                            nonce: item.id,
+                            text: item.text,
+                            type: item.type,
+                            author: item.author,
+                            from: item.from,
+                          })),
+                        );
+                      },
+                      style: 'destructive',
+                    },
+                    {
+                      text: '不了',
+                      onPress: () => {},
+                    },
+                  ]);
                 }}
               />
               {/* <Divider /> */}
@@ -67,7 +93,11 @@ export const SettingScreen: FC = observer(() => {
                 title={'立即下载'}
                 onPress={() => {
                   const list = syncStore.list;
-                  favoriteStore.addMore(list);
+                  const newList = list.map((item) => ({
+                    ...item,
+                    id: item.likedId ?? item.id,
+                  }));
+                  favoriteStore.addMore(newList);
                 }}
               />
             </ListItemGroup>
@@ -83,8 +113,8 @@ export const SettingScreen: FC = observer(() => {
                 <Fragment>
                   <Item
                     item={listRenderItem.item}
-                    onDelete={(id) => {
-                      syncStore.delete(id);
+                    onDelete={async (id) => {
+                      await syncStore.delete(id);
                     }}
                     onPress={(id) => {
                       navigator.navigate('item-modal', {

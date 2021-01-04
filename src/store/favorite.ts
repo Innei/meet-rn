@@ -1,8 +1,8 @@
-import { makeAutoObservable, toJS } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { FavoriteModel, SentenceType, Snowflake } from '../models';
 import { $http } from '../utils/request';
 import FlakeId from '../utils/snowflake';
-import { FavoriteStorage, PendingStorage } from '../utils/storage';
+import { FavoriteStorage } from '../utils/storage';
 
 export class FavoriteStore {
   constructor() {
@@ -39,8 +39,18 @@ export class FavoriteStore {
       // @ts-ignore
       model.type = SentenceType.USER;
     } else {
+      if (
+        this.map.has(model.id) ||
+        (model.likeId && this.map.has(model.likeId)) ||
+        // @ts-ignore
+        this.map.has(model.nonce)
+      ) {
+        return;
+      }
+
       //@ts-ignore
       model.type = SentenceType.SYSTEM;
+      model.likeId = model.id;
     }
     // @ts-ignore
     const newModel = await FavoriteStorage.add(model);
