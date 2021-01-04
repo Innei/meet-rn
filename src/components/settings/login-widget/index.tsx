@@ -1,8 +1,7 @@
 import { InputItem } from '@ant-design/react-native';
 import React, { FC, useState } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
-import { ListButtonItem } from '../list-item-base';
-import { sharedStyle } from '../list-item-base';
+import { StyleSheet, View } from 'react-native';
+import { ListButtonItem, sharedStyle } from '../list-item-base';
 export const LoginWidget: FC<{
   onLogin: (username: string, password: string) => void;
 }> = (props) => {

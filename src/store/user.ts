@@ -53,7 +53,11 @@ export class UserStoreStatic {
       setToken(user.token);
       setUser(user);
     } catch (e) {
-      console.log(e);
+      console.log(e.message);
+      if (e.response && [422, 401].includes(e.response.status)) {
+        this.logout();
+      }
+      throw e;
     }
   };
   logout = () => {
