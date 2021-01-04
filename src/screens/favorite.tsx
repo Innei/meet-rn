@@ -4,10 +4,11 @@ import {
   TransitionPresets,
 } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import { Text } from 'react-native';
 import { View } from 'react-native-animatable';
 import { FlatList } from 'react-native-gesture-handler';
+import { Divider } from '../components/divider';
 import { Item } from '../components/item';
 import { Colors } from '../constants/color';
 import { FavoriteModel } from '../models';
@@ -23,20 +24,27 @@ export const FavoriteScreen: FC = observer(() => {
   return (
     <View style={{ minHeight: '100%' }}>
       {list.length > 0 ? (
-        <FlatList
-          data={list}
-          renderItem={(listRenderItem) => (
-            <Item
-              item={listRenderItem.item}
-              onDelete={(id) => {
-                favoriteStore.deleteById(id);
-              }}
-              onPress={(id) => {
-                navigator.navigate('item-modal', { item: listRenderItem.item });
-              }}
-            />
-          )}
-        />
+        <View style={{ minHeight: '100%', backgroundColor: '#fff' }}>
+          <FlatList
+            data={list}
+            renderItem={(listRenderItem) => (
+              <Fragment>
+                <Item
+                  item={listRenderItem.item}
+                  onDelete={(id) => {
+                    favoriteStore.deleteById(id);
+                  }}
+                  onPress={(id) => {
+                    navigator.navigate('item-modal', {
+                      item: listRenderItem.item,
+                    });
+                  }}
+                />
+                <Divider />
+              </Fragment>
+            )}
+          />
+        </View>
       ) : (
         <View
           style={{

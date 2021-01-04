@@ -77,13 +77,3 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
-
-export const sharedStyle = {
-  root: {
-    borderBottomWidth: 0.3,
-    borderTopWidth: 0.3,
-    borderColor: '#bbb',
-    backgroundColor: Colors.fff,
-    position: 'relative',
-  },
-};

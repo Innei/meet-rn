@@ -1,13 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
-import React, { FC, useCallback } from 'react';
+import React, { FC, Fragment, useCallback } from 'react';
 import { View } from 'react-native';
 import {
   FlatList,
   ScrollView,
   TouchableOpacity,
 } from 'react-native-gesture-handler';
+import { Divider } from '../components/divider';
 import { Item } from '../components/item';
 import {
   ListButtonItem,
@@ -48,7 +49,7 @@ export const SettingScreen: FC = observer(() => {
 
             <ListItemGroup>
               <ListButtonItem
-                title={'立即同步'}
+                title={'立即上传'}
                 onPress={() => {
                   syncStore.sync(
                     favoriteStore.list.map((item) => ({
@@ -61,6 +62,14 @@ export const SettingScreen: FC = observer(() => {
                   );
                 }}
               />
+              {/* <Divider /> */}
+              <ListButtonItem
+                title={'立即下载'}
+                onPress={() => {
+                  const list = syncStore.list;
+                  favoriteStore.addMore(list);
+                }}
+              />
             </ListItemGroup>
           </View>
         ) : (
@@ -71,17 +80,20 @@ export const SettingScreen: FC = observer(() => {
             data={syncStore.list}
             renderItem={(listRenderItem) => {
               return (
-                <Item
-                  item={listRenderItem.item}
-                  onDelete={(id) => {
-                    syncStore.delete(id);
-                  }}
-                  onPress={(id) => {
-                    navigator.navigate('item-modal', {
-                      item: listRenderItem.item,
-                    });
-                  }}
-                />
+                <Fragment>
+                  <Item
+                    item={listRenderItem.item}
+                    onDelete={(id) => {
+                      syncStore.delete(id);
+                    }}
+                    onPress={(id) => {
+                      navigator.navigate('item-modal', {
+                        item: listRenderItem.item,
+                      });
+                    }}
+                  />
+                  <Divider />
+                </Fragment>
               );
             }}
           />

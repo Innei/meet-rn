@@ -123,8 +123,8 @@ const styles = StyleSheet.create({
   root: {
     paddingHorizontal: 10,
     paddingVertical: 12,
-    borderBottomColor: Colors.gray,
-    borderBottomWidth: 0.3,
+    // borderBottomColor: '#bbb',
+    // borderBottomWidth: 0.3,
     position: 'relative',
   },
   content: {

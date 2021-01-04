@@ -22,6 +22,14 @@ export class FavoriteStore {
     return this.list;
   };
 
+  addMore = async (
+    list: (Omit<FavoriteModel, 'id' | 'type'> &
+      Partial<Pick<FavoriteModel, 'id'>>)[],
+  ) => {
+    for await (const item of list) {
+      await this.add(item);
+    }
+  };
   add = async (
     model: Omit<FavoriteModel, 'id' | 'type'> &
       Partial<Pick<FavoriteModel, 'id'>>,
