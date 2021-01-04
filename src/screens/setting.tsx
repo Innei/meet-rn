@@ -157,19 +157,22 @@ export const SettingScreen: FC = observer(() => {
   );
 });
 
-export const SettingStackScreen = () => {
+export const SettingStackScreen = observer(() => {
+  const {
+    userStore: { isLogged },
+  } = useStore();
   return (
     <Navigator>
       <Screen
         name="@me"
         options={{
-          title: '我',
+          title: isLogged ? '我' : '登陆',
         }}
         component={SettingScreen}
       />
     </Navigator>
   );
-};
+});
 
 export const Label: FC<{}> = (props) => (
   <Text style={styles.label}>{props.children}</Text>

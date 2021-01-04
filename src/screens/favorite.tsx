@@ -5,9 +5,9 @@ import {
 } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
 import React, { FC, Fragment } from 'react';
-import { Text } from 'react-native';
+import { Alert, Text } from 'react-native';
 import { View } from 'react-native-animatable';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { Divider } from '../components/divider';
 import { Item } from '../components/item';
 import { Colors } from '../constants/color';
@@ -66,7 +66,7 @@ export const ModalView: FC<{
   route: { key: string; name: string; params: { item?: FavoriteModel } };
 }> = (props) => {
   const item = props.route.params.item;
-  console.log(item);
+
   const navigator = useNavigation();
   if (!item) {
     navigator.navigate('home');
@@ -100,15 +100,46 @@ export const ModalView: FC<{
 };
 
 const RootStack = createStackNavigator();
-export const _FavoriteStackScreen: FC = () => (
-  <Navigator>
-    <Screen
-      name="favorite"
-      options={{ title: '喜欢' }}
-      component={FavoriteScreen}
-    />
-  </Navigator>
-);
+export const _FavoriteStackScreen: FC = observer(() => {
+  const { favoriteStore } = useStore();
+  return (
+    <Navigator>
+      <Screen
+        name="favorite"
+        options={{
+          title: '喜欢',
+          headerRight: () => {
+            return (
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={async () => {
+                  Alert.alert('清空?', '真的要清空吗?', [
+                    {
+                      text: '手抖了',
+                      style: 'destructive',
+                    },
+                    {
+                      style: 'cancel',
+                      text: '真的!',
+                      onPress: async () => {
+                        await favoriteStore.empty();
+                      },
+                    },
+                  ]);
+                }}
+              >
+                <View style={{ marginRight: 10 }}>
+                  <Text style={{ color: Colors.red }}>清空</Text>
+                </View>
+              </TouchableOpacity>
+            );
+          },
+        }}
+        component={FavoriteScreen}
+      />
+    </Navigator>
+  );
+});
 
 export const FavoriteStackScreen = () => (
   <RootStack.Navigator

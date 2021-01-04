@@ -66,4 +66,10 @@ export class FavoriteStore {
     this.list = this.list.filter((m) => m.id !== id);
     return this.list;
   };
+
+  empty = async () => {
+    for await (const i of this.list) {
+      await this.deleteById(i.id);
+    }
+  };
 }

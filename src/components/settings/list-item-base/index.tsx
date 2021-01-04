@@ -31,9 +31,17 @@ export const ListButtonItem: FC<ButtonProps> = (props) => {
       {isIOS ? (
         <Button {...props} />
       ) : (
-        <TouchableOpacity onPress={props.onPress}>
+        <TouchableOpacity
+          onPress={props.disabled ? () => {} : props.onPress}
+          activeOpacity={props.disabled ? 1 : 0.8}
+        >
           <View style={{ paddingVertical: 6, alignItems: 'center' }}>
-            <Text style={{ color: Colors.blue, fontSize: 14 }}>
+            <Text
+              style={{
+                color: props.disabled ? Colors.deep : Colors.blue,
+                fontSize: 14,
+              }}
+            >
               {props.title}
             </Text>
           </View>
