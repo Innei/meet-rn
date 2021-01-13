@@ -24,16 +24,19 @@ import {
 import * as Animatable from 'react-native-animatable';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AntdIcons from 'react-native-vector-icons/AntDesign';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import { Colors } from '../constants/color';
-import { HitokotoModel, SentenceModel } from '../models';
+import { SentenceModel } from '../models';
 import { useStore } from '../store';
 import { toast } from '../utils/for-android';
 import { $http } from '../utils/request';
 
 const { Navigator, Screen } = createStackNavigator();
-export const HomeScreen = observer(({ navigation }: any) => {
-  const today = dayjs().format('YYYY-M-D');
+
+let lock = false;
+export const HomeScreen = observer(() => {
+  const today = dayjs().format('YYYY 年 M 月 D 日');
 
   const [data, setData] = useState<null | SentenceModel>(null);
   useEffect(() => {
@@ -41,9 +44,13 @@ export const HomeScreen = observer(({ navigation }: any) => {
   }, []);
 
   const fetchData = () => {
-    $http.get<SentenceModel>('/sentences').then((data) => {
-      setData(data as any);
-    });
+    if (!lock) {
+      lock = true;
+      $http.get<SentenceModel>('/sentences').then((data) => {
+        setData(data as any);
+        lock = false;
+      });
+    }
   };
 
   const buttonRef = useRef<
@@ -164,7 +171,7 @@ export const HomeScreen = observer(({ navigation }: any) => {
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleShare}>
-            <Icons name="share" size={18} />
+            <AntdIcons name="sharealt" size={18} />
           </TouchableOpacity>
         </View>
 

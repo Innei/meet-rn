@@ -24,9 +24,10 @@ export const FavoriteScreen: FC = observer(() => {
   return (
     <View style={{ minHeight: '100%' }}>
       {list.length > 0 ? (
-        <View style={{ minHeight: '100%', backgroundColor: '#fff' }}>
+        <View style={{ minHeight: '100%' }}>
           <FlatList
             data={list}
+            style={{ backgroundColor: '#fff' }}
             renderItem={(listRenderItem) => (
               <Fragment>
                 <Item

@@ -1,12 +1,16 @@
 import { InputItem } from '@ant-design/react-native';
+import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { makeAutoObservable } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import { Alert, Platform, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-animatable';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { Divider } from '../components/divider';
+import { Item } from '../components/item';
 import { Colors } from '../constants/color';
+import { SentenceType } from '../models';
 import { Store } from '../store';
 const { Screen, Navigator } = createStackNavigator();
 
@@ -52,15 +56,15 @@ class Draft {
 const draft = new Draft();
 export const InspireScreen: FC = observer(() => {
   const { creator, from, setCreator, setFrom, setText, text } = draft;
+  const navigator = useNavigation();
+
+  const userCreatedList = Store.favoriteStore.list.filter(
+    (i) => i.type === SentenceType.USER,
+  );
   return (
     <View style={styles.root}>
       <View>
-        <InputItem
-          value={text}
-          onChangeText={setText}
-          autoCapitalize="none"
-          autoFocus
-        >
+        <InputItem value={text} onChangeText={setText} autoCapitalize="none">
           正文
         </InputItem>
         <InputItem
@@ -74,6 +78,40 @@ export const InspireScreen: FC = observer(() => {
           来自
         </InputItem>
       </View>
+
+      {!!userCreatedList.length && (
+        <View
+          style={{
+            marginTop: 50,
+            height: '100%',
+            backgroundColor: '#fff',
+            marginHorizontal: -20,
+          }}
+        >
+          <ScrollView style={{ paddingBottom: 100 }}>
+            {userCreatedList
+              .filter((i) => i.type === SentenceType.USER)
+              .sort((b, a) => a.createdAt.getTime() - b.createdAt.getTime())
+              .map((i) => (
+                <Fragment>
+                  <Item
+                    item={i}
+                    onDelete={(id) => {
+                      Store.favoriteStore.deleteById(id);
+                    }}
+                    onPress={(id) => {
+                      navigator.navigate('item-modal', {
+                        item: i,
+                      });
+                    }}
+                  />
+
+                  <Divider />
+                </Fragment>
+              ))}
+          </ScrollView>
+        </View>
+      )}
     </View>
   );
 });
